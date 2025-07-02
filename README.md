@@ -37,12 +37,21 @@ The application will be available at `http://localhost:8080`.
 
 ## API Endpoints
 
-(Assuming a RESTful API, these are some example endpoints that might be available : coming soon)
+The following endpoints are available:
 
-- `GET /api/products` - Get a list of all products
-- `GET /api/products/{id}` - Get a specific product by ID
-- `POST /api/products` - Create a new product
-- `GET /api/categories` - Get a list of all categories
+### Product Endpoints
+
+- `GET /api/v1/products`: Get a list of all products.
+- `GET /api/v1/products/{productId}`: Get a specific product by its ID.
+- `POST /api/v1/products`: Create a new product.
+- `PUT /api/v1/products/{id}`: Update an existing product.
+- `DELETE /api/v1/products/{id}`: Delete a product by its ID.
+- `GET /api/v1/products/brand-and-name?brand={brand}&name={name}`: Find products by brand and name.
+- `GET /api/v1/products/category-and-brand?category={category}&brand={brand}`: Find products by category and brand.
+- `GET /api/v1/products/name?name={name}`: Find products by a name containing the given string.
+- `GET /api/v1/products/brand?brand={brand}`: Find products by brand.
+- `GET /api/v1/products/category/{category}`: Find products by category name.
+- `GET /api/v1/products/count?brand={brand}&name={name}`: Count products by brand and name.
 
 ## Contributing
 
