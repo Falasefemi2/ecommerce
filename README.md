@@ -14,7 +14,7 @@ A simple e-commerce application built with Java and Spring Boot.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/falasefemi2/ecommerce.git
+    git clone https://github.com/Falasefemi2/ecommerce.git
     ```
 2.  **Navigate to the project directory:**
     ```bash
@@ -33,7 +33,7 @@ Run the application using the following command:
 ./mvnw spring-boot:run
 ```
 
-The application will be available at `http://localhost:8080`.
+The application will be available at `http://localhost:3080`.
 
 ## API Endpoints
 
