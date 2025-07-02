@@ -39,7 +39,7 @@ The application will be available at `http://localhost:3080`.
 
 The following endpoints are available:
 
-"""### Product Endpoints
+### Product Endpoints
 
 - `GET /api/v1/products`: Get a list of all products.
 - `GET /api/v1/products/{productId}`: Get a specific product by its ID.
@@ -55,13 +55,12 @@ The following endpoints are available:
 
 ### Category Endpoints
 
--`GET /api/v1/categories`: Get a list of all categories.
--`POST /api/v1/categories/add`: Create a new category.
--`GET /api/v1/categories/{id}`: Get a specific category by its ID.
--`GET /api/v1/categories/by-name`: Find products by category and brand.
--`DELETE /api/v1/categories/{id}`: Delete a category by its ID.
--`PUT /api/v1/categories/{id}`: Update an existing category.
-""
+- `GET /api/v1/categories`: Get a list of all categories.
+- `POST /api/v1/categories/add`: Create a new category.
+- `GET /api/v1/categories/{id}`: Get a specific category by its ID.
+- `GET /api/v1/categories/by-name`: Find products by category and brand.
+- `DELETE /api/v1/categories/{id}`: Delete a category by its ID.
+- `PUT /api/v1/categories/{id}`: Update an existing category.
 
 ## Contributing
 
