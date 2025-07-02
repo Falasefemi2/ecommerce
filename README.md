@@ -62,6 +62,13 @@ The following endpoints are available:
 - `DELETE /api/v1/categories/{id}`: Delete a category by its ID.
 - `PUT /api/v1/categories/{id}`: Update an existing category.
 
+### Image Endpoints
+
+- `POST /api/v1/images`: Upload one or more images for a product.
+- `GET /api/v1/images/download/{imageId}`: Download an image by its ID.
+- `PUT /api/v1/images/{imageId}/update`: Update an existing image.
+- `DELETE /api/v1/images/{imageId}`: Delete an image by its ID.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
