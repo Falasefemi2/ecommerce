@@ -69,6 +69,19 @@ The following endpoints are available:
 - `PUT /api/v1/images/{imageId}/update`: Update an existing image.
 - `DELETE /api/v1/images/{imageId}`: Delete an image by its ID.
 
+### Cart Endpoints
+
+- `GET /api/v1/carts/{cartId}`: Get a cart by its ID.
+- `DELETE /api/v1/carts/{cartId}/clear`: Clear a cart by its ID.
+- `GET /api/v1/carts/{cartId}/total`: Get the total amount of a cart by its ID.
+
+### Cart Item Endpoints
+
+- `POST /api/v1/cartsItem/{cartId}/items`: Add an item to a cart.
+- `POST /api/v1/cartsItem/items`: Add an item to a new cart.
+- `PUT /api/v1/cartsItem/{cartId}/items/{productId}`: Update the quantity of an item in a cart.
+- `DELETE /api/v1/cartsItem/{cartId}/items/{productId}`: Remove an item from a cart.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
