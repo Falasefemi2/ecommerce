@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.femmie.ecommerce.exception.ResourceNotFoundException;
 import com.femmie.ecommerce.model.Cart;
@@ -25,6 +26,7 @@ public class CartItemService implements ICartItemService {
     private final CartRepository cartRepository;
 
     @Override
+    @Transactional
     public void addCartItem(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
         Optional<Product> product = productService.findProductById(productId);
@@ -58,6 +60,7 @@ public class CartItemService implements ICartItemService {
     }
 
     @Override
+    @Transactional
     public void removeItemFromCart(Long cartId, Long productId) {
         Cart cart = cartService.getCart(cartId);
         CartItem item = getCartItem(cartId, productId);
@@ -70,6 +73,7 @@ public class CartItemService implements ICartItemService {
     }
 
     @Override
+    @Transactional
     public void updateItemQuantity(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
         CartItem item = getCartItem(cartId, productId);
@@ -90,6 +94,9 @@ public class CartItemService implements ICartItemService {
     @Override
     public CartItem getCartItem(Long cartId, Long productId) {
         Cart cart = cartService.getCart(cartId);
+        if (cart.getCartItems() == null) {
+            throw new ResourceNotFoundException("Cart item not found for productId: " + productId);
+        }
         return cart.getCartItems()
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
