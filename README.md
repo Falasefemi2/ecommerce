@@ -82,6 +82,20 @@ The following endpoints are available:
 - `PUT /api/v1/cartsItem/{cartId}/items/{productId}`: Update the quantity of an item in a cart.
 - `DELETE /api/v1/cartsItem/{cartId}/items/{productId}`: Remove an item from a cart.
 
+The following tests are available:
+
+- `CategoryControllerTest.java`
+- `ImageControllerTest.java`
+- `ProductControllerTest.java`
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## Testing
+
+To run the tests, use the following command:
+
+```bash
+./mvnw test
+```
