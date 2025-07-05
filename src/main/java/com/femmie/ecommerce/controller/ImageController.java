@@ -33,66 +33,77 @@ public class ImageController {
     private final IImageService imageService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> saveImages(
+    public ResponseEntity<ApiResponse<List<ImageDto>>> saveImages(
             @RequestParam List<MultipartFile> files,
             @RequestParam Long productId) {
 
         if (files == null || files.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse("No files uploaded", null));
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>("No files uploaded", null));
         }
 
         if (productId == null) {
-            return ResponseEntity.badRequest().body(new ApiResponse("Product ID is required", null));
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>("Product ID is required", null));
         }
 
         try {
             List<ImageDto> imageDto = imageService.saveImages(files, productId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Upload success", imageDto));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>("Upload successful", imageDto));
         } catch (RuntimeException e) {
             return ResponseEntity.internalServerError()
-                    .body(new ApiResponse("Failed to upload image(s): " + e.getMessage(), null));
+                    .body(new ApiResponse<>("Failed to upload image(s): " + e.getMessage(), null));
         }
     }
 
     @GetMapping("/download/{imageId}")
-    public ResponseEntity<ByteArrayResource> downloadImage(@PathVariable Long imageId) {
-        Image image = imageService.getImageById(imageId);
-        ByteArrayResource resource = new ByteArrayResource(image.getImage());
+    public ResponseEntity<?> downloadImage(@PathVariable Long imageId) {
+        try {
+            Image image = imageService.getImageById(imageId);
+            ByteArrayResource resource = new ByteArrayResource(image.getImage());
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(image.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-                .body(resource);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(image.getFileType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+                    .body(resource);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>("Image not found: " + e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>("Error while downloading image: " + e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{imageId}/update")
-    public ResponseEntity<ApiResponse> updateImage(
+    public ResponseEntity<ApiResponse<Void>> updateImage(
             @PathVariable Long imageId,
             @RequestParam MultipartFile file) {
 
         try {
             imageService.updateImage(file, imageId);
-            return ResponseEntity.ok(new ApiResponse("Update success!", null));
+            return ResponseEntity.ok(new ApiResponse<>("Update successful", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse("Image not found: " + e.getMessage(), null));
+                    .body(new ApiResponse<>("Image not found: " + e.getMessage(), null));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("Update failed: " + e.getMessage(), null));
+            return ResponseEntity.internalServerError()
+                    .body(new ApiResponse<>("Update failed: " + e.getMessage(), null));
         }
     }
 
     @DeleteMapping("/{imageId}")
-    public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId) {
+    public ResponseEntity<ApiResponse<Void>> deleteImage(@PathVariable Long imageId) {
         try {
             imageService.deleteImageById(imageId);
-            return ResponseEntity.ok(new ApiResponse("Delete success", null));
+            return ResponseEntity.ok(new ApiResponse<>("Delete successful", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse("Image not found: " + e.getMessage(), null));
+                    .body(new ApiResponse<>("Image not found: " + e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("Delete failed: " + e.getMessage(), null));
+                    .body(new ApiResponse<>("Delete failed: " + e.getMessage(), null));
         }
     }
 }

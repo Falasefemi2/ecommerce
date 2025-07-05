@@ -43,7 +43,7 @@ public class ImageControllerTest {
 
         mockMvc.perform(delete("/api/v1/images/{imageId}", imageId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Delete success"));
+                .andExpect(jsonPath("$.message").value("Delete successful"));
 
     }
 
@@ -92,7 +92,7 @@ public class ImageControllerTest {
                 .file(file2)
                 .param("productId", String.valueOf(productId)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Upload success"))
+                .andExpect(jsonPath("$.message").value("Upload successful"))
                 .andExpect(jsonPath("$.data[0].id").value(1))
                 .andExpect(jsonPath("$.data[0].fileName").value("image1.jpg"))
                 .andExpect(jsonPath("$.data[1].fileName").value("image2.jpg"));
@@ -147,7 +147,7 @@ public class ImageControllerTest {
                     return request;
                 }))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Update success!"));
+                .andExpect(jsonPath("$.message").value("Update successful"));
     }
 
     @Test

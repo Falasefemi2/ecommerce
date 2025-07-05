@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.femmie.ecommerce.exception.ResourceNotFoundException;
 import com.femmie.ecommerce.model.Cart;
 import com.femmie.ecommerce.response.ApiResponse;
+import com.femmie.ecommerce.response.ResponseMessage;
 import com.femmie.ecommerce.service.cart.ICartService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,56 +25,50 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CartController {
 
-    private static final String CART_NOT_FOUND_MESSAGE = "Cart not found";
-    private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
-
     private final ICartService cartService;
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId) {
+    public ResponseEntity<ApiResponse<Cart>> getCart(@PathVariable Long cartId) {
         try {
             Cart cart = cartService.getCart(cartId);
-            ApiResponse response = new ApiResponse("Cart fetched successfully", cart);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new ApiResponse<>(ResponseMessage.CART_FETCHED, cart));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(CART_NOT_FOUND_MESSAGE, null));
+                    .body(new ApiResponse<>(ResponseMessage.CART_NOT_FOUND, null));
         } catch (Exception e) {
             log.error("Error fetching cart with ID: {}", cartId, e);
             return ResponseEntity.internalServerError()
-                    .body(new ApiResponse(INTERNAL_SERVER_ERROR, null));
+                    .body(new ApiResponse<>(ResponseMessage.INTERNAL_SERVER_ERROR, null));
         }
     }
 
     @DeleteMapping("/{cartId}/clear")
-    public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId) {
+    public ResponseEntity<ApiResponse<Void>> clearCart(@PathVariable Long cartId) {
         try {
             cartService.clearCart(cartId);
-            ApiResponse response = new ApiResponse("Cart cleared successfully", null);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new ApiResponse<>(ResponseMessage.CART_CLEARED, null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(CART_NOT_FOUND_MESSAGE, null));
+                    .body(new ApiResponse<>(ResponseMessage.CART_NOT_FOUND, null));
         } catch (Exception e) {
             log.error("Error clearing cart with ID: {}", cartId, e);
             return ResponseEntity.internalServerError()
-                    .body(new ApiResponse(INTERNAL_SERVER_ERROR, null));
+                    .body(new ApiResponse<>(ResponseMessage.INTERNAL_SERVER_ERROR, null));
         }
     }
 
     @GetMapping("/{cartId}/total")
-    public ResponseEntity<ApiResponse> getTotalAmount(@PathVariable Long cartId) {
+    public ResponseEntity<ApiResponse<BigDecimal>> getTotalAmount(@PathVariable Long cartId) {
         try {
             BigDecimal total = cartService.getTotalPrice(cartId);
-            ApiResponse response = new ApiResponse("Cart total fetched successfully", total);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new ApiResponse<>(ResponseMessage.CART_TOTAL_FETCHED, total));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(CART_NOT_FOUND_MESSAGE, null));
+                    .body(new ApiResponse<>(ResponseMessage.CART_NOT_FOUND, null));
         } catch (Exception e) {
             log.error("Error fetching cart total for ID: {}", cartId, e);
             return ResponseEntity.internalServerError()
-                    .body(new ApiResponse(INTERNAL_SERVER_ERROR, null));
+                    .body(new ApiResponse<>(ResponseMessage.INTERNAL_SERVER_ERROR, null));
         }
     }
 }

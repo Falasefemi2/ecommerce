@@ -1,17 +1,14 @@
 package com.femmie.ecommerce.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ApiResponse {
-    public ApiResponse() {
-    }
-
-    public ApiResponse(String message, Object data) {
-        this.message = message;
-        this.data = data;
-    }
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApiResponse<T> {
 
     private String message;
-    private Object data;
+    private T data;
 }
