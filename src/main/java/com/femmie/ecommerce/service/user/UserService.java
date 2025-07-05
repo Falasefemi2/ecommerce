@@ -1,7 +1,9 @@
 package com.femmie.ecommerce.service.user;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.femmie.ecommerce.dto.UserDto;
 import com.femmie.ecommerce.exception.ResourceNotFoundException;
 import com.femmie.ecommerce.model.User;
 import com.femmie.ecommerce.repository.UserRepository;
@@ -15,39 +17,41 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+    public UserDto getUserById(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public User createUser(CreateUserRequest request) {
+    public UserDto createUser(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
-        User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        return userRepository.save(user);
+
+        User user = modelMapper.map(request, User.class);
+        User savedUser = userRepository.save(user);
+
+        return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override
-    public User updateUser(UserUpdateRequest request, Long userId) {
+    public UserDto updateUser(UserUpdateRequest request, Long userId) {
         return userRepository.findById(userId).map(existingUser -> {
             existingUser.setFirstName(request.getFirstName());
             existingUser.setLastName(request.getLastName());
-            return userRepository.save(existingUser);
+            User updated = userRepository.save(existingUser);
+            return modelMapper.map(updated, UserDto.class);
         }).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
     public void deleteUser(Long userId) {
-        User user = getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userRepository.delete(user);
     }
-
 }

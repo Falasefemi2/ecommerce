@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.femmie.ecommerce.dto.CreateOrderRequest;
+import com.femmie.ecommerce.dto.OrderDto;
+import com.femmie.ecommerce.exception.ResourceNotFoundException;
 import com.femmie.ecommerce.model.Order;
 import com.femmie.ecommerce.response.ApiResponse;
 import com.femmie.ecommerce.service.order.IOrderService;
@@ -33,14 +35,22 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<ApiResponse<Order>> getOrderById(@PathVariable Long orderId) {
-        Order order = orderService.getOrder(orderId);
-        return ResponseEntity.ok(new ApiResponse<>("Order retrieved successfully", order));
+    public ResponseEntity<ApiResponse<OrderDto>> getOrderById(@PathVariable Long orderId) {
+        try {
+            OrderDto order = orderService.getOrder(orderId);
+            return ResponseEntity.ok(new ApiResponse<>("Success", order));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/users/{userId}/orders")
-    public ResponseEntity<ApiResponse<List<Order>>> getOrdersByUserId(@PathVariable Long userId) {
-        List<Order> orders = orderService.getUserOrders(userId);
-        return ResponseEntity.ok(new ApiResponse<>("Orders retrieved successfully", orders));
+    public ResponseEntity<ApiResponse<List<OrderDto>>> getOrdersByUserId(@PathVariable Long userId) {
+        try {
+            List<OrderDto> orders = orderService.getUserOrders(userId);
+            return ResponseEntity.ok(new ApiResponse<>("Success", orders));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

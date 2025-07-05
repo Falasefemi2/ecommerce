@@ -2,13 +2,14 @@ package com.femmie.ecommerce.service.order;
 
 import java.util.List;
 
+import com.femmie.ecommerce.dto.OrderDto;
 import com.femmie.ecommerce.model.Order;
 
 public interface IOrderService {
 
     Order placeOrder(Long userId);
 
-    Order getOrder(Long orderId);
+    OrderDto getOrder(Long orderId);
 
-    List<Order> getUserOrders(Long userId);
+    List<OrderDto> getUserOrders(Long userId);
 }

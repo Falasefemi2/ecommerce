@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.femmie.ecommerce.dto.OrderDto;
 import com.femmie.ecommerce.enums.OrderStatus;
 import com.femmie.ecommerce.exception.ResourceNotFoundException;
 import com.femmie.ecommerce.model.Cart;
@@ -47,14 +48,16 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order getOrder(Long orderId) {
+    public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId)
+                .map(this::convertToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderDto> getUserOrders(Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().map(this::convertToDto).toList();
     }
 
     private Order createOrder(Cart cart) {
@@ -91,4 +94,7 @@ public class OrderService implements IOrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    private OrderDto convertToDto(Order order) {
+        return modelMapper.map(order, OrderDto.class);
+    }
 }

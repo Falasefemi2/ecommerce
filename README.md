@@ -82,11 +82,25 @@ The following endpoints are available:
 - `PUT /api/v1/cartsItem/{cartId}/items/{productId}`: Update the quantity of an item in a cart.
 - `DELETE /api/v1/cartsItem/{cartId}/items/{productId}`: Remove an item from a cart.
 
+### Order Endpoints
+
+-`POST /api/v1/orders`: Create a new order.
+-`GET /api/v1/orders/{orderId}`: Get an order by its ID.
+-`GET /api/v1/orders/users/{userId}/orders`: Get all orders for a user.
+
+### User Endpoints
+
+-`GET /api/v1/users/{userId}`: Get a user by their ID.
+-`POST /api/v1/users`: Create a new user.
+-`PUT /api/v1/users/{userId}`: Update an existing user.
+-`DELETE /api/v1/users/{userId}`: Delete a user by their ID.
+
 The following tests are available:
 
 - `CategoryControllerTest.java`
 - `ImageControllerTest.java`
 - `ProductControllerTest.java`
+- `UserControllerTest.java`
 
 ## Contributing
 
