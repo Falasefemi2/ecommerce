@@ -1,6 +1,7 @@
 package com.femmie.ecommerce.service.user;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.femmie.ecommerce.dto.UserDto;
@@ -18,6 +19,7 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto getUserById(Long userId) {
@@ -33,6 +35,7 @@ public class UserService implements IUserService {
         }
 
         User user = modelMapper.map(request, User.class);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         User savedUser = userRepository.save(user);
 
         return modelMapper.map(savedUser, UserDto.class);
@@ -53,5 +56,10 @@ public class UserService implements IUserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userRepository.delete(user);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
