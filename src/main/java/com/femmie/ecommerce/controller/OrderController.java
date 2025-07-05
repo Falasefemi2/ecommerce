@@ -40,7 +40,8 @@ public class OrderController {
             OrderDto order = orderService.getOrder(orderId);
             return ResponseEntity.ok(new ApiResponse<>("Success", order));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(e.getMessage(), null));
         }
     }
 
